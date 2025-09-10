@@ -1,10 +1,12 @@
 <?php
-include './Data/DataDB.php';
+include '../DataDB.php';
 
 if (!isset($_COOKIE["NameUserM"])) {
-    header("Location: ./index.php");
+    header("Location: ../../index.php");
     exit();
 }
+
+$conexion = ConexionBD::getInstancia()->getConexion();
 
 class Movimiento {
     private $conexion;
@@ -61,39 +63,39 @@ $totalPages = ceil($totalRows / $limit);
 
 $resultados = $movimiento->obtenerMovimientos($search, $limit, $offset);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./CSS/StyleIndex.css" />
+    <link rel="stylesheet" href="../../CSS/StyleIndex.css">
     <title>Historial de Movimientos - Inventory+</title>
-    <link rel="icon" href="./IMG/Logo.png" type="image/x-icon" />
+    <link rel="icon" href="../../IMG/Logo.png" type="image/x-icon">
 </head>
 <body>
 <header>
     <nav>
         <div class="DivNavLogo">
-            <img src="./IMG/Logo.png" alt="" class="LogoNav" />
+            <img src="../../IMG/Logo.png" alt="" class="LogoNav" />
         </div>
         <div class="DivNav">
             <div class="DivButtonsNav1">
-                <a href="./Index.php"><button class="ButtonNav">INICIO</button></a>
+                <a href="../../Index.php"><button class="ButtonNav">INICIO</button></a>
 
                 <?php if (isset($_COOKIE["NameUserM"])): ?>
                     <?php if (isset($_COOKIE["RoleDB"]) && $_COOKIE["RoleDB"] == "Administrador"): ?>
-                        <a href="./Usuarios.php"><button class="ButtonNav">USUARIOS</button></a>
+                        <a href="../../Usuarios.php"><button class="ButtonNav">USUARIOS</button></a>
                     <?php endif; ?>
 
-                    <a href="./Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="./Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
+                    <a href="../../Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
                 <?php if (isset($_COOKIE["NameUserM"])): ?>
-                    <a href="./Data/LogOut.php"><button class="ButtonNav">CERRAR SESIÓN</button></a>
+                    <a href="../../Data/LogOut.php"><button class="ButtonNav">CERRAR SESIÓN</button></a>
                 <?php else: ?>
-                    <a href="./LoginPage.php"><button class="ButtonNav">INICIAR SESIÓN</button></a>
+                    <a href="../../LoginPage.php"><button class="ButtonNav">INICIAR SESIÓN</button></a>
                 <?php endif; ?>
             </div>
         </div>
@@ -137,7 +139,7 @@ $resultados = $movimiento->obtenerMovimientos($search, $limit, $offset);
                 <td><?php echo htmlspecialchars($row["articulos"]); ?></td>
                 <td class="action-buttons">
                   <a href="./MovimientosDetalle.php?id=<?php echo $row["id"]; ?>" class="editButton" title="Ver Detalle">
-                    <img src="./IMG/Editar.png" alt="Ver detalle" width="20px" />
+                    <img src="../../IMG/Editar.png" alt="Ver detalle" width="20px" />
                   </a>
                 </td>
               </tr>
@@ -169,7 +171,9 @@ $resultados = $movimiento->obtenerMovimientos($search, $limit, $offset);
           </nav>
         <?php endif; ?>
       </div>
-
+      <?php if (isset($_COOKIE["RoleDB"]) && ($_COOKIE["RoleDB"] == "Administrador" || $_COOKIE["RoleDB"] == "Coordinador")): ?>
+        <a href="../../Inventario.php" class="addButton">Volver</a>
+      <?php endif; ?>
     </div>
   </article>
 </section>

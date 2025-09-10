@@ -1,6 +1,11 @@
 <?php
 include './Data/DataDB.php';
 
+if (!isset($_COOKIE["NameUserM"]) || !isset($_COOKIE["RoleDB"]) || $_COOKIE["RoleDB"] != "Administrador") {
+    header("Location: ./index.php");
+    exit();
+}
+
 class UsuarioModel {
     private $conexion;
     private $itemsPerPage;
@@ -79,10 +84,7 @@ class UsuarioModel {
     }
 }
 
-if (!isset($_COOKIE["NameUserM"]) || !isset($_COOKIE["RoleDB"]) || $_COOKIE["RoleDB"] != "Administrador") {
-    header("Location: ./index.php");
-    exit();
-}
+$conexion = ConexionBD::getInstancia()->getConexion();
 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -92,8 +94,10 @@ $usuarioModel = new UsuarioModel($conexion, 10);
 $totalItems = $usuarioModel->contarUsuarios($search);
 $totalPaginas = ceil($totalItems / 10);
 $users = $usuarioModel->obtenerUsuarios($search, $offset);
+
 $conexion->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -118,9 +122,7 @@ $conexion->close();
                     <?php if (isset($_COOKIE["RoleDB"]) && $_COOKIE["RoleDB"] == "Administrador"): ?>
                         <a href="./Usuarios.php"><button class="ButtonNav">USUARIOS</button></a>
                     <?php endif; ?>
-
                     <a href="./Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="./Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
@@ -170,10 +172,10 @@ $conexion->close();
                     <td><?php echo htmlspecialchars($user['RoleDB']); ?></td>
                     <?php if (isset($_COOKIE["RoleDB"]) && ($_COOKIE["RoleDB"] == "Administrador" || $_COOKIE["RoleDB"] == "Coordinador")) : ?>
                     <td class="action-buttons">
-                        <a href="./Data/Data Users/EditarUser.php?id=<?php echo urlencode($user['CC']); ?>" class="editButton" title="Editar">
+                        <a href="./Data/Data_Users/EditarUser.php?id=<?php echo urlencode($user['CC']); ?>" class="editButton" title="Editar">
                             <img src="./IMG/Editar.png" alt="Editar" width="20px" />
                         </a>
-                        <a href="./Data/Data Users/EliminarUser.php?id=<?php echo urlencode($user['CC']); ?>" class="deleteButton" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
+                        <a href="./Data/Data_Users/EliminarUser.php?id=<?php echo urlencode($user['CC']); ?>" class="deleteButton" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
                             <img src="./IMG/Borrar.png" alt="Eliminar" width="20px" />
                         </a>
                     </td>
@@ -209,7 +211,7 @@ $conexion->close();
         </div>
 
         <?php if (isset($_COOKIE["RoleDB"]) && ($_COOKIE["RoleDB"] == "Administrador" || $_COOKIE["RoleDB"] == "Coordinador")) : ?>
-            <a href="./Data/Data Users/AñadirUser.php" class="addButton">Agregar Usuario</a>
+            <a href="./Data/Data_Users/AñadirUser.php" class="addButton">Agregar Usuario</a>
         <?php endif; ?>
     </div>
 </article>

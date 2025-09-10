@@ -1,4 +1,7 @@
 <?php
+
+include '../DataDB.php';
+
 if (isset($_COOKIE["RoleDB"]) && ($_COOKIE["RoleDB"] == "Auditor")) {
     header("Location: ../../index.php");
     exit();
@@ -20,7 +23,7 @@ class Producto {
     }
 }
 
-include '../DataDB.php';
+$conexion = ConexionBD::getInstancia()->getConexion();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
@@ -60,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
 
                     <a href="../../Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="../../Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
@@ -78,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <section>
     <article>
         <div class="DivPrincipal">
-            <h1 class="MainTittle">AGREGAR OBJETO</h1>
+            <h1 class="MainTittle">Agregar Objeto</h1>
             <form method="POST" class="FormStyle">
                 <label for="nombre">Nombre:</label>
                 <input type="text" name="nombre" required maxlength="30">
@@ -94,15 +96,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <label for="cantidad">Cantidad:</label>
                 <input type="number" name="cantidad" required min="0" step="1" maxlength="10">
-                <br>
 
-                <button class="SubmitButton" type="submit">Agregar Producto</button>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Añadir Producto</button>
+                    <a href="../../Inventario.php" class="cancel-btn">Cancelar</a>
+                </div>       
             </form>
         </div>
     </article>
 </section>
 </body>
-<script src="../../JS/En_Editores/ScriptCarrito.js"></script>
 <footer>
     <p>By Jhojan Danilo</p>
 </footer>

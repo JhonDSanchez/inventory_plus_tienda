@@ -1,10 +1,37 @@
 <?php
-include './Data/DataDB.php';
+
+class ConexionBD {
+    private static $instancia = null;
+    private $conexion;
+
+    private $server = "localhost";
+    private $user = "root";
+    private $pass = "";
+    private $db = "Inventario";
+
+    private function __construct() {
+        $this->conexion = new mysqli($this->server, $this->user, $this->pass, $this->db);
+        if ($this->conexion->connect_error) {
+            die("Conexión fallida: " . $this->conexion->connect_error);
+        }
+    }
+
+    public static function getInstancia() {
+        if (self::$instancia === null) {
+            self::$instancia = new ConexionBD();
+        }
+        return self::$instancia;
+    }
+
+    public function getConexion() {
+        return $this->conexion;
+    }
+}
 
 class Autenticacion {
     public static function validarAdministrador() {
         if (!isset($_COOKIE["NameUserM"])) {
-            header("Location: ./index.php");
+            header("Location: ../../index.php");
             exit();
         }
     }
@@ -38,6 +65,7 @@ class Movimiento {
     }
 }
 
+$conexion = ConexionBD::getInstancia()->getConexion();
 Autenticacion::validarAdministrador();
 
 if (!isset($_GET['id'])) {
@@ -63,33 +91,33 @@ $detalles = $movimientoObj->obtenerDetalles($id_movimiento);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../CSS/StyleIndex.css">
     <title>Detalle del Movimiento - Inventory+</title>
-    <link rel="stylesheet" href="./CSS/StyleIndex.css" />
+    <link rel="icon" href="../../IMG/Logo.png" type="image/x-icon">
 </head>
 <body>
 <header>
     <nav>
         <div class="DivNavLogo">
-            <img src="./IMG/Logo.png" alt="" class="LogoNav" />
+            <img src="../../IMG/Logo.png" alt="" class="LogoNav" />
         </div>
         <div class="DivNav">
             <div class="DivButtonsNav1">
-                <a href="./Index.php"><button class="ButtonNav">INICIO</button></a>
+                <a href="../../Index.php"><button class="ButtonNav">INICIO</button></a>
 
                 <?php if (isset($_COOKIE["NameUserM"])): ?>
                     <?php if (isset($_COOKIE["RoleDB"]) && $_COOKIE["RoleDB"] == "Administrador"): ?>
-                        <a href="./Usuarios.php"><button class="ButtonNav">USUARIOS</button></a>
+                        <a href="../../Usuarios.php"><button class="ButtonNav">USUARIOS</button></a>
                     <?php endif; ?>
 
-                    <a href="./Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="./Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
+                    <a href="../../Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
                 <?php if (isset($_COOKIE["NameUserM"])): ?>
-                    <a href="./Data/LogOut.php"><button class="ButtonNav">CERRAR SESIÓN</button></a>
+                    <a href="../../Data/LogOut.php"><button class="ButtonNav">CERRAR SESIÓN</button></a>
                 <?php else: ?>
-                    <a href="./LoginPage.php"><button class="ButtonNav">INICIAR SESIÓN</button></a>
+                    <a href="../../LoginPage.php"><button class="ButtonNav">INICIAR SESIÓN</button></a>
                 <?php endif; ?>
             </div>
         </div>

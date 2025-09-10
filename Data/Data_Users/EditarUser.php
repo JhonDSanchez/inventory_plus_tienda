@@ -1,4 +1,6 @@
 <?php
+include '../DataDB.php';
+
 class Autenticacion {
     public static function validarAdministrador() {
         if (!isset($_COOKIE["NameUserM"]) || !isset($_COOKIE["RoleDB"]) || $_COOKIE["RoleDB"] !== "Administrador") {
@@ -43,7 +45,8 @@ class Usuario {
 }
 
 Autenticacion::validarAdministrador();
-include '../DataDB.php';
+
+$conexion = ConexionBD::getInstancia()->getConexion();
 
 $user = null;
 if (isset($_GET['id'])) {
@@ -90,7 +93,6 @@ if (isset($_GET['id'])) {
                     <?php endif; ?>
 
                     <a href="../../Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="../../Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
@@ -108,7 +110,7 @@ if (isset($_GET['id'])) {
     <section>
         <article>
             <div class="DivPrincipal">
-                <h1 class="MainTittle">EDITAR USUARIO</h1>
+                <h1 class="MainTittle">Editar Usuario</h1>
                 <form method="POST" class="FormStyle">
                     <label for="CC">ID:</label>
                     <input type="text" name="CC" id="CC" value="<?php echo htmlspecialchars($user['CC']); ?>" maxlength="14" pattern="\d{1,14}" required>
@@ -128,8 +130,11 @@ if (isset($_GET['id'])) {
                         <option value="Coordinador" <?php echo ($user['RoleDB'] == 'Coordinador') ? 'selected' : ''; ?>>Coordinador</option>
                         <option value="Auditor" <?php echo ($user['RoleDB'] == 'Auditor') ? 'selected' : ''; ?>>Auditor</option>
                     </select>
-                    <br>
-                    <button class="SubmitButton" type="submit">Guardar Cambios</button>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="save-btn">Guardar Cambios</button>
+                        <a href="../../Usuarios.php" class="cancel-btn">Cancelar</a>
+                    </div>
                 </form>
             </div>
         </article>

@@ -1,4 +1,6 @@
 <?php
+include '../DataDB.php';
+
 class Autenticacion {
     public static function validarAdministrador() {
         if (!isset($_COOKIE["NameUserM"]) || !isset($_COOKIE["RoleDB"]) || $_COOKIE["RoleDB"] !== "Administrador") {
@@ -24,7 +26,8 @@ class Usuario {
 }
 
 Autenticacion::validarAdministrador();
-include '../DataDB.php';
+
+$conexion = ConexionBD::getInstancia()->getConexion();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cc = $_POST['CC'];
@@ -67,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
 
                     <a href="../../Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="../../Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
@@ -85,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section>
         <article>
             <div class="DivPrincipal">
-                <h1 class="MainTittle">AÑADIR USUARIO</h1>
+                <h1 class="MainTittle">Añadir Usuario</h1>
                 <form method="POST" class="FormStyle">
                     <label for="CC">ID:</label>
                     <input type="text" name="CC" id="CC" maxlength="14" pattern="\d{1,14}" required>
@@ -105,8 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="Coordinador">Coordinador</option>
                         <option value="Auditor" selected>Auditor</option>
                     </select>
-                    <br>
-                    <button class="SubmitButton" type="submit">Añadir Usuario</button>
+
+                    <div class="form-actions">
+                        <button type="submit" class="save-btn">Añadir Usuario</button>
+                        <a href="../../Usuarios.php" class="cancel-btn">Cancelar</a>
+                    </div>
                 </form>
             </div>
         </article>

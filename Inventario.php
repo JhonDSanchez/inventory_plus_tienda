@@ -28,11 +28,9 @@ class ProductoRepository {
 
         $sql = "SELECT COUNT(*) as total FROM productos $where";
         $stmt = $this->conexion->prepare($sql);
-
         if (!empty($params)) {
             $stmt->bind_param($types, ...$params);
         }
-
         $stmt->execute();
         $result = $stmt->get_result();
         $total = $result->fetch_assoc()['total'] ?? 0;
@@ -63,13 +61,11 @@ class ProductoRepository {
         $stmt = $this->conexion->prepare($sql);
         $params = array_merge($params, [$offset, $limit]);
         $types .= "ii";
-
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
-
         $result = $stmt->get_result();
-        $productos = [];
 
+        $productos = [];
         while ($row = $result->fetch_assoc()) {
             $productos[] = $row;
         }
@@ -84,13 +80,14 @@ $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] :
 $itemsPerPage = 10;
 $offset = ($page - 1) * $itemsPerPage;
 
+$conexion = ConexionBD::getInstancia()->getConexion();
 $repo = new ProductoRepository($conexion);
 
 $totalItems = $repo->contarProductos($search);
 $totalPages = ceil($totalItems / $itemsPerPage);
 $productos = $repo->obtenerProductos($search, $offset, $itemsPerPage);
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -98,7 +95,7 @@ $productos = $repo->obtenerProductos($search, $offset, $itemsPerPage);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="./CSS/StyleIndex.css" />
-    <title>Inventario - Inventory+</title>
+    <title>Movimientos - Inventory+</title>
     <link rel="icon" href="./IMG/Logo.png" type="image/x-icon" />
 </head>
 <header>
@@ -114,9 +111,7 @@ $productos = $repo->obtenerProductos($search, $offset, $itemsPerPage);
                     <?php if (isset($_COOKIE["RoleDB"]) && $_COOKIE["RoleDB"] == "Administrador"): ?>
                         <a href="./Usuarios.php"><button class="ButtonNav">USUARIOS</button></a>
                     <?php endif; ?>
-
                     <a href="./Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="./Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
@@ -133,7 +128,7 @@ $productos = $repo->obtenerProductos($search, $offset, $itemsPerPage);
 <section>
   <article>
     <div class="DivPrincipal">
-      <h1 class="MainTittle">Inventario Disponible</h1>
+      <h1 class="MainTittle">Inventario</h1>
     </div>
 
     <div class="table-container">
@@ -208,6 +203,9 @@ $productos = $repo->obtenerProductos($search, $offset, $itemsPerPage);
 
       <?php if (isset($_COOKIE["RoleDB"]) && ($_COOKIE["RoleDB"] == "Administrador" || $_COOKIE["RoleDB"] == "Coordinador")): ?>
         <a href="./Data/Data_Edicion/AñadirProducto.php" class="addButton">Agregar Producto</a>
+      <?php endif; ?>
+      <?php if (isset($_COOKIE["RoleDB"]) && ($_COOKIE["RoleDB"] == "Administrador" || $_COOKIE["RoleDB"] == "Coordinador")): ?>
+        <a href="./Data/Data_Edicion/Movimientos.php" class="addButton">Movimientos</a>
       <?php endif; ?>
     </div>
   </article>

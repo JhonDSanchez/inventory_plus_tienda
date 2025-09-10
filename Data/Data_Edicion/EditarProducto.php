@@ -6,6 +6,8 @@ if (isset($_COOKIE["RoleDB"]) && ($_COOKIE["RoleDB"] == "Auditor")) {
 
 include '../DataDB.php';
 
+$conexion = ConexionBD::getInstancia()->getConexion();
+
 class Producto {
     private $conexion;
 
@@ -117,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
 
                     <a href="../../Inventario.php"><button class="ButtonNav">INVENTARIO</button></a>
-                    <a href="../../Movimientos.php"><button class="ButtonNav">MOVIMIENTOS</button></a>
                 <?php endif; ?>
             </div>
             <div class="DivButtonsNav2">
@@ -156,15 +157,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <label for="cantidad">Cantidad:</label>
                 <input type="number" name="cantidad" value="<?php echo htmlspecialchars($producto['cantidad']); ?>" min="0" step="1" maxlength="10" required />
-                <br />
 
-                <button class="SubmitButton" type="submit">Guardar Cambios</button>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Guardar Cambios</button>
+                    <a href="../../Inventario.php" class="cancel-btn">Cancelar</a>
+                </div>                
             </form>
         </div>
     </article>
 </section>
 </body>
-<script src="../../JS/En_Editores/ScriptCarrito.js"></script>
 <footer>
     <p>By Jhojan Danilo</p>
 </footer>

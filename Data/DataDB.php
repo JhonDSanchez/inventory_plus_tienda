@@ -1,14 +1,30 @@
 <?php
-$server = "localhost";
-$user = "root";
-$pass = "";
-$db = "Inventario";
+class ConexionBD {
+    private static $instancia = null;
+    private $conexion;
 
-$conexion = new mysqli($server, $user, $pass, $db);
+    private $server = "localhost";
+    private $user = "root";
+    private $pass = "";
+    private $db = "inventario_tienda";
 
-if ($conexion -> connect_errno) {
-    die("Conexión Fallida: " . $conexion -> connect_error);
-} else {
-    echo "";
+    private function __construct() {
+        $this->conexion = new mysqli($this->server, $this->user, $this->pass, $this->db);
+
+        if ($this->conexion->connect_error) {
+            die("Conexión fallida: " . $this->conexion->connect_error);
+        }
+    }
+
+    public static function getInstancia() {
+        if (self::$instancia === null) {
+            self::$instancia = new ConexionBD();
+        }
+        return self::$instancia;
+    }
+
+    public function getConexion() {
+        return $this->conexion;
+    }
 }
 ?>
