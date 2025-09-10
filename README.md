@@ -1,4 +1,4 @@
-# Inventory+
+# Inventory+ (Tienda)
 
 **Inventory+** es un sistema de gestión de inventario enfocado en tiendas de componentes gamer y tecnología. Desarrollado en PHP orientado a programacion orientada a objetos
 con base de datos MySQL y utilizando HTML, CSS y JavaScript, permite controlar productos, usuarios y movimientos dentro del inventario, con una interfaz sencilla y funcional.
@@ -62,3 +62,4 @@ gabinetes y más. Diseñado para ser intuitivo y adaptable a pequeñas o mediana
 | id_movimiento| INT      | FK a `movimientos.id`                     |
 | id_articulo  | INT      | FK a `productos.id`                       |
 | cantidad     | INT      | Cantidad involucrada                      |
+| tipo_movimiento     | ENUM     | Tipo de Movimiento                      |
